@@ -1,0 +1,132 @@
+{
+  "project": "RAG over a Hindi Document",
+  "document": "Agni_Ki_Udaan_Adhyayan_Sahayika_Hindi.pdf",
+  "evaluation_note": "Historical manual qualitative baseline recorded with the earlier multilingual-e5-base configuration. These results are NOT an evaluation of the current qwen3-embedding:0.6b implementation. Run the six required questions again after rebuilding ChromaDB to produce current-model results.",
+  "questions": [
+    {
+      "id": 1,
+      "query": "SLV-III ने किस उपग्रह को कक्षा में स्थापित किया और किस वर्ष?",
+      "language": "Hindi",
+      "observed_answer": "SLV-III ने रोहिणी उपग्रह को 1980 में कक्षा में स्थापित किया।",
+      "expected_key_facts": [
+        "रोहिणी उपग्रह",
+        "1980"
+      ],
+      "result": "correct",
+      "notes": "Answer is consistent with the retrieved document evidence. The LLM's inline citation should still be checked against the retrieved chunk IDs."
+    },
+    {
+      "id": 2,
+      "query": "कलाम को भारत रत्न किस वर्ष प्राप्त हुआ?",
+      "language": "Hindi",
+      "observed_answer": "कलाम को भारत रत्न 1997 में प्राप्त हुआ।",
+      "expected_key_facts": [
+        "1997"
+      ],
+      "result": "correct_answer_citation_mismatch",
+      "retrieved_chunk_ids": [
+        "chunk_0057",
+        "chunk_0066",
+        "chunk_0013",
+        "chunk_0029",
+        "chunk_0067",
+        "chunk_0056",
+        "chunk_0041"
+      ],
+      "llm_cited_chunk_id": "chunk_0067",
+      "notes": "The answer is correct. In the earlier run the LLM cited chunk_0056, which was not in the retrieved list; in the latest run it cited chunk_0067, which was retrieved. Verify the cited chunk text before treating the citation as supporting evidence."
+    },
+    {
+      "id": 3,
+      "query": "पोखरण-II में कलाम की क्या भूमिका थी?",
+      "language": "Hindi",
+      "observed_answer": "The model generated a broad description of Kalam's leadership and national strategic role, without a precise evidence-backed explanation or citation.",
+      "expected_key_facts": [
+        "His specific role in the Pokhran-II tests, as stated in the supplied document"
+      ],
+      "result": "incomplete_or_ungrounded",
+      "retrieved_chunk_ids": [
+        "chunk_0048",
+        "chunk_0032",
+        "chunk_0013",
+        "chunk_0029",
+        "chunk_0018",
+        "chunk_0044",
+        "chunk_0036"
+      ],
+      "notes": "The relevant chunk_0058 was not among the seven chunks in the latest shown run. Earlier keyword inspection found Pokhran-II / 1998 / central-role wording in chunk_0058, indicating a retrieval-ranking issue."
+    },
+    {
+      "id": 4,
+      "query": "Which institution did Kalam attend to study aeronautical engineering?",
+      "language": "English",
+      "observed_answer": "The model answered IIT Chennai, while quoting the source wording 'वैमानिकी इंजीनियरिंग (एमआईटी, चेन्नई)'.",
+      "expected_key_facts": [
+        "Madras Institute of Technology (MIT), Chennai"
+      ],
+      "result": "incorrect",
+      "retrieved_chunk_ids": [
+        "chunk_0022",
+        "chunk_0025",
+        "chunk_0032",
+        "chunk_0064",
+        "chunk_0067",
+        "chunk_0036",
+        "chunk_0002"
+      ],
+      "notes": "The model incorrectly expanded MIT as IIT. The source wording identifies MIT, Chennai. The answer should preserve the source terminology."
+    },
+    {
+      "id": 5,
+      "query": "Who co-wrote the autobiography, and in what year was it published?",
+      "language": "English",
+      "observed_answer": "Arun Tiwari, 1999; the model also introduced an unsupported title ('Agnisakshar') in one run.",
+      "expected_key_facts": [
+        "Arun Tiwari",
+        "1999"
+      ],
+      "result": "partially_correct_ungrounded",
+      "retrieved_chunk_ids": [
+        "chunk_0002",
+        "chunk_0056",
+        "chunk_0009",
+        "chunk_0058",
+        "chunk_0029",
+        "chunk_0013",
+        "chunk_0067"
+      ],
+      "notes": "The names/year are consistent with the document, but the generated title and explanation were not reliably supported by the retrieved text."
+    },
+    {
+      "id": 6,
+      "query": "How and where did Kalam die in 2015?",
+      "language": "English",
+      "observed_answer": "The model stated that the retrieved text did not contain the date, circumstances or location of his death.",
+      "expected_key_facts": [
+        "The circumstances and location of death stated in the supplied PDF"
+      ],
+      "result": "not_answered",
+      "retrieved_chunk_ids": [
+        "chunk_0056",
+        "chunk_0058",
+        "chunk_0059",
+        "chunk_0067",
+        "chunk_0057",
+        "chunk_0052",
+        "chunk_0048"
+      ],
+      "notes": "The model abstained. Inspect the source PDF and extraction output to identify the relevant passage and determine whether the failure is extraction or retrieval."
+    }
+  ],
+  "summary": {
+    "total_questions": 6,
+    "fully_correct_and_grounded": 1,
+    "correct_answer_with_citation_concern": 1,
+    "partially_correct_or_ungrounded": 1,
+    "incomplete_or_ungrounded": 1,
+    "incorrect": 1,
+    "not_answered": 1
+  },
+  "embedding_model_evaluated": "intfloat/multilingual-e5-base (historical baseline)",
+  "current_embedding_model": "qwen3-embedding:0.6b (not yet evaluated in this file)"
+}
